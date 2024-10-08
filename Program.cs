@@ -14,35 +14,54 @@ namespace Neighborhood3DXPresence
             return string.IsNullOrEmpty(ip) ? PromptForIp() : ip;
         }
 
-        static async Task AutomaticDownload(IXbox xbox, string remoteFilePath)
+static async Task AutomaticDownload(IXbox xbox, string remoteFilePath)
+{
+    string localDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "dx360_shim", "dev_hdd0", "game", "BLUS30463", "USRDIR");
+    string localFilePath = Path.Combine(localDirectory, "discordrp.json");
+
+    if (!Directory.Exists(localDirectory))
+    {
+        Directory.CreateDirectory(localDirectory);
+        Console.WriteLine($"Created directory: {localDirectory}");
+    }
+
+    while (true)
+    {
+        // Start a new download task
+        _ = DownloadFileAsync(xbox, remoteFilePath, localFilePath);
+
+        // Wait before starting the next download attempt
+        await Task.Delay(5000);
+    }
+}
+
+static async Task DownloadFileAsync(IXbox xbox, string remoteFilePath, string localFilePath)
+{
+    using (var cts = new CancellationTokenSource())
+    {
+        cts.CancelAfter(TimeSpan.FromSeconds(5.5)); // Set the timeout
+
+        try
         {
-            string localDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "dx360_shim", "dev_hdd0", "game", "BLUS30463", "USRDIR");
-            string localFilePath = Path.Combine(localDirectory, "discordrp.json");
+            Console.WriteLine($"Downloading {remoteFilePath} to {localFilePath}...");
 
-            if (!Directory.Exists(localDirectory))
-            {
-                Directory.CreateDirectory(localDirectory);
-                Console.WriteLine($"Created directory: {localDirectory}");
-            }
+            var downloadTask = Task.Run(() => xbox.DownloadFile(remoteFilePath), cts.Token);
+            byte[] fileBytes = await downloadTask;
 
-            while (true)
-            {
-                try
-                {
-                    Console.WriteLine($"Downloading {remoteFilePath} to {localFilePath}...");
-                    byte[] fileBytes = xbox.DownloadFile(remoteFilePath);
-                    File.Delete(localFilePath);
-                    File.WriteAllBytes(localFilePath, fileBytes);
-                    Console.WriteLine("Download completed successfully.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error during download: {ex.Message}");
-                }
-
-                await Task.Delay(5000); // Wait for 5 seconds before the next download
-            }
+            // Write the downloaded bytes to a file
+            await File.WriteAllBytesAsync(localFilePath, fileBytes);
+            Console.WriteLine("Download completed successfully.");
         }
+        catch (OperationCanceledException)
+        {
+            Console.WriteLine("Download timed out.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during download: {ex.Message}\n{ex.StackTrace}");
+        }
+    }
+}
 
         static async Task Main(string[] args)
         {
@@ -52,9 +71,9 @@ namespace Neighborhood3DXPresence
 
             string remoteFilePath = "GAME:\\discordrp.json";
 
-            await AutomaticDownload(xbox, remoteFilePath); 
+            await AutomaticDownload(xbox, remoteFilePath);
             Console.WriteLine("Neighborhood3DXPresence is running... press Enter to end...");
-            Console.ReadLine(); 
+            Console.ReadLine();
         }
 
     }
