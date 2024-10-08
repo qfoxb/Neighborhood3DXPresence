@@ -1,0 +1,3 @@
+[submodule "dep/NeighborSharp"]
+	path = dep/NeighborSharp
+	url = https://github.com/InvoxiPlayGames/NeighborSharp.git

@@ -396,3 +396,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# RB3DX Rich Presence stuff
+dx_discordrp.py
+dx360_shim/

@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neighborhood3DXPresence", "Neighborhood3DXPresence.csproj", "{09708737-CA42-45BF-971C-63ED026CAA9F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A1D1F447-950D-4AE6-AD40-4620466C9709} = {A1D1F447-950D-4AE6-AD40-4620466C9709}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeighborSharp", "dep\NeighborSharp\NeighborSharp\NeighborSharp.csproj", "{A1D1F447-950D-4AE6-AD40-4620466C9709}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{09708737-CA42-45BF-971C-63ED026CAA9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09708737-CA42-45BF-971C-63ED026CAA9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09708737-CA42-45BF-971C-63ED026CAA9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1D1F447-950D-4AE6-AD40-4620466C9709}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1D1F447-950D-4AE6-AD40-4620466C9709}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1D1F447-950D-4AE6-AD40-4620466C9709}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1D1F447-950D-4AE6-AD40-4620466C9709}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
