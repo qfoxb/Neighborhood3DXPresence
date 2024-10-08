@@ -1,4 +1,4 @@
-﻿using NeighborSharp;
+using NeighborSharp;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -12,13 +12,6 @@ namespace Neighborhood3DXPresence
             Console.Write("Enter the IP Address of your Xbox 360: ");
             string ip = Console.ReadLine()?.Trim();
             return string.IsNullOrEmpty(ip) ? PromptForIp() : ip;
-        }
-
-        static string PromptForRemotePath()
-        {
-            Console.Write("Enter your Rock Band 3 installation path: ");
-            string path = Console.ReadLine()?.Trim();
-            return string.IsNullOrEmpty(path) ? PromptForRemotePath() : path;
         }
 
         static async Task AutomaticDownload(IXbox xbox, string remoteFilePath)
@@ -37,7 +30,8 @@ namespace Neighborhood3DXPresence
                 try
                 {
                     Console.WriteLine($"Downloading {remoteFilePath} to {localFilePath}...");
-                    byte[] fileBytes = xbox.DownloadFile(remoteFilePath + "discordrp.json");
+                    byte[] fileBytes = xbox.DownloadFile(remoteFilePath);
+                    File.Delete(localFilePath);
                     File.WriteAllBytes(localFilePath, fileBytes);
                     Console.WriteLine("Download completed successfully.");
                 }
@@ -56,7 +50,7 @@ namespace Neighborhood3DXPresence
 
             IXbox xbox = new Xbox360(ipAddress);
 
-            string remoteFilePath = PromptForRemotePath();
+            string remoteFilePath = "GAME:\\discordrp.json";
 
             await AutomaticDownload(xbox, remoteFilePath); 
             Console.WriteLine("Neighborhood3DXPresence is running... press Enter to end...");
